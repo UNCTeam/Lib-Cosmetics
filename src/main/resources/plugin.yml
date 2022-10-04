@@ -1,0 +1,4 @@
+name: Lib Cosmetics
+version: '${project.version}'
+main: fr.teamunc.libcosmetics.cosmetics_UNCLib
+api-version: 1.19
