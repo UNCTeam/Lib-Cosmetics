@@ -7,7 +7,7 @@ public final class cosmetics_UNCLib extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-
+        CosmeticsLib.init(this);
     }
 
     @Override
