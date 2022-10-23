@@ -4,10 +4,14 @@ import fr.teamunc.base_unclib.models.jsonEntities.UNCEntitiesContainer;
 import fr.teamunc.libcosmetics.minecraft.commandsExecutor.CosmeticsCommands;
 import fr.teamunc.libcosmetics.controllers.UNCCosmeticsController;
 import fr.teamunc.libcosmetics.minecraft.eventListeners.InventoryListener;
+import fr.teamunc.libcosmetics.minecraft.eventListeners.PlayerJoinQuitListener;
 import fr.teamunc.libcosmetics.models.PlayerCosmeticsContainer;
+import lombok.Builder;
 import lombok.Getter;
+import org.bukkit.Material;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+
 
 public class CosmeticsLib {
     @Getter
@@ -16,15 +20,21 @@ public class CosmeticsLib {
     @Getter
     private static UNCCosmeticsController uncCosmeticsController;
 
-    public static void init(JavaPlugin plugin) {
+    private static Material cosmeticMaterialMapper;
+
+    public static void init(JavaPlugin plugin, Material cosmeticItem) {
         CosmeticsLib.plugin = plugin;
+        CosmeticsLib.cosmeticMaterialMapper = cosmeticItem;
         uncCosmeticsController = new UNCCosmeticsController(CosmeticsLib.initCosmeticContainer());
+        initCommands();
+        initCosmeticContainer();
     }
 
     private static void initCommands() {
-        PluginCommand teamCommand = plugin.getCommand("uncitem");
-        if (teamCommand != null) {
-            teamCommand.setExecutor(new CosmeticsCommands());
+        PluginCommand cosmeticCommand = plugin.getCommand("cosmetic");
+        if (cosmeticCommand != null) {
+            cosmeticCommand.setExecutor(new CosmeticsCommands());
+            cosmeticCommand.setTabCompleter(new CosmeticsCommands());
         }
     }
 
@@ -43,6 +53,7 @@ public class CosmeticsLib {
 
     public static void initGameListeners(JavaPlugin plugin) {
         plugin.getServer().getPluginManager().registerEvents(new InventoryListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(), plugin);
     }
 
     public static void reload() {
