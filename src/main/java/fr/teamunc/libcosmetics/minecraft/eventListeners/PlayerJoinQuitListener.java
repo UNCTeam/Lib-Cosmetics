@@ -20,15 +20,15 @@ public class PlayerJoinQuitListener implements Listener {
         if(CosmeticsLib.getUncCosmeticsController().getPlayerCosmeticsContainer().getOwnedPlayerCosmetics().get(event.getPlayer().getUniqueId()) == null) {
             CosmeticsLib.getUncCosmeticsController().getPlayerCosmeticsContainer().getOwnedPlayerCosmetics().put(event.getPlayer().getUniqueId(), new ArrayList<>());
         }
-        if(CosmeticsLib.getUncCosmeticsController().getPlayerCosmeticsContainer().getArmorStands().containsKey(event.getPlayer().getUniqueId())) {
+        if(CosmeticsLib.getUncCosmeticsController().getPlayerCosmeticsContainer().getOwnedPlayerCosmetics().containsKey(event.getPlayer().getUniqueId())) {
             // ajout de l'armorstand dans MC
             PlayerCosmeticsContainer container = CosmeticsLib.getUncCosmeticsController().getPlayerCosmeticsContainer();
-            List<Cosmetic> equipedCosmetics = new ArrayList<>(Arrays.asList(
+            List<String> equipedCosmetics = new ArrayList<>(Arrays.asList(
                     container.getHatCosmetics().get(event.getPlayer().getUniqueId()),
                     container.getBackCosmetics().get(event.getPlayer().getUniqueId()),
                     container.getHandCosmetics().get(event.getPlayer().getUniqueId()))
             );
-            for(Cosmetic cosmetic : equipedCosmetics) {
+            for(String cosmetic : equipedCosmetics) {
                 CosmeticsLib.getUncCosmeticsController().equipCosmetic(cosmetic, event.getPlayer());
             }
         }
@@ -36,10 +36,11 @@ public class PlayerJoinQuitListener implements Listener {
 
     @EventHandler
     public void onPLayerLeave(PlayerQuitEvent event) {
-        if(CosmeticsLib.getUncCosmeticsController().getPlayerCosmeticsContainer().getArmorStands().containsKey(event.getPlayer().getUniqueId())) {
+        if(CosmeticsLib.getUncCosmeticsController().getArmorStands().containsKey(event.getPlayer().getUniqueId())) {
             // Supression de l'armorstand dans MC
-            ArmorStand stand = CosmeticsLib.getUncCosmeticsController().getPlayerCosmeticsContainer().getArmorStands().get(event.getPlayer().getUniqueId());
+            ArmorStand stand = CosmeticsLib.getUncCosmeticsController().getArmorStands().get(event.getPlayer().getUniqueId());
             event.getPlayer().removePassenger(stand);
+            CosmeticsLib.getUncCosmeticsController().getArmorStands().remove(event.getPlayer().getUniqueId());
             stand.remove();
         }}
 }

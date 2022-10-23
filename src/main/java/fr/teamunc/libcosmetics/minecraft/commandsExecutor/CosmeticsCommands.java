@@ -24,36 +24,73 @@ public class CosmeticsCommands extends CommandsTab implements CommandExecutor {
             return true;
         }
         if(args.length != 0) {
-            if(args[0].equalsIgnoreCase("cosmetic")) {
-                Bukkit.getServer().broadcastMessage("ici");
-                if(args.length > 1) {
-                    switch (args[1]) {
-                        case "equip":
-                            Message.Get().sendMessage("on est ici", sender, true);
-                            if(args.length < 3) {
-                                Message.Get().sendMessage("usage : /cosmetic equip <playerName> <customItemName>", sender, true);
+            if(command.getName().equalsIgnoreCase("cosmetic")) {
+                switch (args[0]) {
+                    case "equip":
+                        if(args.length < 2) {
+                            Message.Get().sendMessage("usage : /cosmetic equip <CosmeticName>", sender, true);
+                            return true;
+                        } else {
+                            try {
+                                CosmeticsLib.getUncCosmeticsController().equipCosmetic(args[1], (Player) sender);
+                                Message.Get().sendMessage("Cosmetic " + args[1] + " equiped !", sender, false);
                                 return true;
-                            } else {
-                                Player player = Bukkit.getPlayer(args[1]);
-
-                                if (player == null) {
-                                    Message.Get().sendMessage("Player " + args[1] + " not found!", sender, true);
-                                    return true;
-                                }
-                                try {
-                                    CosmeticsLib.getUncCosmeticsController().equipCosmetic(args[2], player);
-                                    Message.Get().sendMessage("Cosmetic " + args[2] + " equiped to " + args[1] + "!", sender, false);
-                                    return true;
-                                } catch (Exception e) {
-                                    Message.Get().sendMessage("Cosmetic " + args[2] + " not found!", sender, true);
-                                    return true;
-                                }
+                            } catch (Exception e) {
+                                Message.Get().sendMessage("Cosmetic " + args[1] + " not found!", sender, true);
+                                return true;
                             }
-                        case "remove":
-                            break;
-                        case "add":
-                            break;
-                    }
+                        }
+                    case "remove":
+                        if(args.length < 2) {
+                            Message.Get().sendMessage("usage : /cosmetic remove <cosmetic>", sender, true);
+                            return true;
+                        } else {
+                            try {
+                                if (CosmeticsLib.getUncCosmeticsController().getCustomCosmeticMap().containsKey(args[1])) {
+                                    CosmeticsLib.getUncCosmeticsController().removeCosmetic(args[1], (Player) sender);
+                                    Message.Get().sendMessage("Cosmetic " + args[1] + " removed !", sender, false);
+                                } else {
+                                    throw new Exception();
+                                }
+                                return true;
+                            } catch (Exception e) {
+                                Message.Get().sendMessage("Cosmetic " + args[1] + " not found!", sender, true);
+                                return true;
+                            }
+                        }
+                    case "add":
+                        if(args.length < 3) {
+                            Message.Get().sendMessage("usage : /cosmetic add <playerName> <customItemName>", sender, true);
+                            return true;
+                        } else {
+                            Player player = Bukkit.getPlayer(args[1]);
+                            if (player == null) {
+                                Message.Get().sendMessage("Player " + args[1] + " not found!", sender, true);
+                                return true;
+                            }
+                            try {
+                                CosmeticsLib.getUncCosmeticsController().addCosmeticToPlayer(args[2], player);
+                                Message.Get().sendMessage("Cosmetic " + args[2] + " added to " + args[1] + "!", sender, false);
+                                return true;
+                            } catch (Exception e) {
+                                Message.Get().sendMessage("Cosmetic " + args[2] + " not found!", sender, true);
+                                return true;
+                            }
+                        }
+                    case "list":
+                        Message.Get().sendMessage("Cosmetics list : ", sender, false);
+                        Player player = (Player) sender;
+                        List<String> cosmetics = CosmeticsLib.getUncCosmeticsController().getPlayerCosmeticsContainer().getOwnedPlayerCosmetics().get(player.getUniqueId());
+                        if(cosmetics == null) {
+                            Message.Get().sendMessage("You don't have any cosmetic!", sender, true);
+                            return true;
+                        } else {
+                            Message.Get().sendMessage("Your cosmetics : ", sender, false);
+                            for(String cosmetic : cosmetics) {
+                                Message.Get().sendMessage(cosmetic, sender, false);
+                            }
+                            return true;
+                        }
                 }
             }
         }
@@ -62,14 +99,28 @@ public class CosmeticsCommands extends CommandsTab implements CommandExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] args) {
-        List<String> result = checkAllTab(
-                args,
-                Arrays.asList("add"),
-                CosmeticsLib.getPlugin().getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()),
-                new ArrayList<>(CosmeticsLib.getUncCosmeticsController().getRegisteredCosmetics().stream()
-                        .map(Cosmetic::getCosmeticKey)
-                        .collect(Collectors.toList())
-                ));
+        List<String> result;
+        if(args[0].equalsIgnoreCase("equip") || args[0].equalsIgnoreCase("remove")) {
+            result = checkAllTab(
+                    args,
+                    Arrays.asList("equip", "remove", "add", "list"),
+                    new ArrayList<>(CosmeticsLib.getUncCosmeticsController().getRegisteredCosmetics().stream()
+                            .map(Cosmetic::getCosmeticKey)
+                            .collect(Collectors.toList())
+                    ),
+                    Arrays.asList(""));
+        } else {
+            result = checkAllTab(
+                    args,
+                    Arrays.asList("add", "list", "equip", "remove"),
+                    CosmeticsLib.getPlugin().getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()),
+                    new ArrayList<>(CosmeticsLib.getUncCosmeticsController().getRegisteredCosmetics().stream()
+                            .map(Cosmetic::getCosmeticKey)
+                            .collect(Collectors.toList())
+                    ),
+                    Arrays.asList(""));
+        }
+
 
         //sort the list
         Collections.sort(result);

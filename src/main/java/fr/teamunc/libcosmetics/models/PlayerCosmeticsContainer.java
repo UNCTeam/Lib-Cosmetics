@@ -17,19 +17,13 @@ public class PlayerCosmeticsContainer extends UNCEntitiesContainer {
     Contient la liste de cosmétiques qu'un joueur a équipé sur lui
      */
     @Getter
-    private HashMap<UUID, Cosmetic> hatCosmetics = new HashMap<>();
+    private HashMap<UUID, String> hatCosmetics = new HashMap<>();
     @Getter
-    private HashMap<UUID, Cosmetic> backCosmetics = new HashMap<>();
+    private HashMap<UUID, String> backCosmetics = new HashMap<>();
     @Getter
-    private HashMap<UUID, Cosmetic> handCosmetics = new HashMap<>();
-
-    /**
-    Liste des armor stand équipé sur un joueur et actif
-     */
-    @Getter
-    private HashMap<UUID, ArmorStand> armorStands = new HashMap<>();
+    private HashMap<UUID, String> handCosmetics = new HashMap<>();
 
     @Getter
-    private HashMap<UUID, List<Cosmetic>> ownedPlayerCosmetics = new HashMap<>();
+    private HashMap<UUID, List<String>> ownedPlayerCosmetics = new HashMap<>();
 
 }

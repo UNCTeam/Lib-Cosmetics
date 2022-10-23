@@ -20,6 +20,7 @@ public class CosmeticsLib {
     @Getter
     private static UNCCosmeticsController uncCosmeticsController;
 
+    @Getter
     private static Material cosmeticMaterialMapper;
 
     public static void init(JavaPlugin plugin, Material cosmeticItem) {

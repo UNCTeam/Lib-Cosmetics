@@ -1,5 +1,7 @@
 package fr.teamunc.libcosmetics;
 
+import com.google.gson.GsonBuilder;
+import fr.teamunc.libcosmetics.models.PlayerCosmeticsContainer;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class cosmetics_UNCLib extends JavaPlugin {
@@ -12,6 +14,6 @@ public final class cosmetics_UNCLib extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        CosmeticsLib.getUncCosmeticsController().getPlayerCosmeticsContainer().save("cosmetics");
     }
 }

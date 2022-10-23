@@ -1,5 +1,6 @@
 package fr.teamunc.libcosmetics.models.cosmetic;
 
+import fr.teamunc.libcosmetics.CosmeticsLib;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,7 +32,7 @@ public class Cosmetic {
 
     public ItemStack getItemStack() {
         // TODO : Changer l'item en config dans le plugin
-        ItemStack item = new ItemStack(Material.PAPER);
+        ItemStack item = new ItemStack(CosmeticsLib.getCosmeticMaterialMapper());
         ItemMeta meta = item.getItemMeta();
         meta.setCustomModelData(this.id);
         meta.setDisplayName(this.name);
