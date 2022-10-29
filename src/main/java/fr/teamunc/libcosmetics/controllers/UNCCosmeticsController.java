@@ -100,7 +100,7 @@ public class UNCCosmeticsController {
         } else {
             stand = (ArmorStand) player.getLocation().getWorld().spawnEntity(armorLoc, EntityType.ARMOR_STAND);
             stand.setVisible(false);
-            stand.setCollidable(false);
+            stand.setMarker(true); // permet de réduire la hitbox de l'armor stand
             stand.setArms(true);
         }
         player.addPassenger(stand);
